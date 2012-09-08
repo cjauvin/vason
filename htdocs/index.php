@@ -11,10 +11,14 @@
 <h1 style="font-size: 200%">Welcome to the VaSOn Annotation Button app!</h1>
 <br /><br />
 
+<?php
+$base_url = sprintf("http%s://%s", isset($_SERVER['HTTPS'])?"s":"",  $_SERVER['SERVER_NAME']);
+?>
+
 <span style="font-size: 150%">
 To begin, please drag this
 <a style="padding: 5px; text-decoration: none; border: 1px dashed blue" 
-   href="javascript:(function(){window.open('https://tbdb.mcgill.ca/vason/button.php?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(getSelection().toString())+'&_id='+Math.random(),'_blank','width=500,height=150')})()">
+   href="javascript:(function(){window.open('<?=$base_url?>/vason/button.php?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(getSelection().toString())+'&_id='+Math.random(),'_blank','width=500,height=150')})()">
   VaSOn Button</a>
 in your browser&apos;s bookmark area or toolbar.
 <br /><br />
