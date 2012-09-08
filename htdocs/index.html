@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title id="page-title">VaSOn Button</title>
+    <title id="page-title">VaSOn Annotation Button</title>
     <link rel="stylesheet" type="text/css" href="extjs/resources/css/ext-all.css">
     <script type="text/javascript" src="extjs/ext-all.js"></script>
 
@@ -14,12 +14,13 @@ To begin, please drag this
 <a style="padding: 5px; text-decoration: none; border: 1px dashed blue" 
    href="javascript:(function(){window.open('http://localhost/vason/button.php?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(getSelection().toString())+'&_id='+Math.random(),'_blank','width=500,height=150')})()">
   VaSOn Button</a>
-in your browser&apos;s bookmark area or "toolbar".
+in your browser&apos;s bookmark area or toolbar.
 <br /><br />
-To use, select some text that you wish to annotate in the page you are currently browser, and click it, and complete the process in the popup window.
-You can then check in real-time the content of the database, in the grid below.
+To use, first select some text that you wish to annotate in the page you are currently browsing, then click the button, and complete the annotation in the popup window. 
+The annotation items are grouped by URL/text, so you can correct a previous entry by selecting it again.
+You can check the content of the database in real-time, with the grid below.
 <br /><br />
-<i>Todo: add/restructure fields if needed, add field autocompletion, make grid columns sortable, make items deletable.</i>
+<i>Todo: add/restructure fields if needed, add autocompletion, make grid items deletable.</i>
 </span>
 <br /><br /><br />
 
@@ -53,7 +54,7 @@ Ext.onReady(function() {
 
     var grid = Ext.create('Ext.grid.Panel', {
         renderTo: document.body,
-        title: 'Saved Documents',
+        title: 'Saved Annotations',
         store: store,
         width: 800,
         height: 400,

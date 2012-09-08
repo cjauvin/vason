@@ -15,6 +15,28 @@ echo sprintf("var text = '%s';", addslashes($_GET['text']));
 
 Ext.onReady(function() {
 
+    var process = function(action) {
+        if (Ext.getCmp('url').getValue() == '[not available: please supply it]') {
+            Ext.getCmp('url').markInvalid('URL not available');
+            return;
+        }
+        if (Ext.getCmp('text').getValue() == '[not available: please supply it]') {
+            Ext.getCmp('text').markInvalid('text not available');
+            return;
+        }
+        if (form.getForm().isValid()) {
+            form.getForm().submit({
+                url: '/vason_server/' + action,
+                success: function(_form, action) {
+                    window.close();
+                },
+                failure: function(_form, action) {
+                    document.write('<b>Sorry there was an error.. please send the following to cjauvin@gmail.com:</b><br/><br />' + action.result.error_msg);
+                }
+            });
+        }        
+    };
+
     var form = Ext.widget({
         xtype: 'form',
         layout: 'form',
@@ -64,27 +86,14 @@ Ext.onReady(function() {
         buttons: [{
             text: 'Save',
             handler: function() {
-                if (Ext.getCmp('url').getValue() == '[not available: please supply it]') {
-                    Ext.getCmp('url').markInvalid('URL not available');
-                    return;
-                }
-                if (Ext.getCmp('text').getValue() == '[not available: please supply it]') {
-                    Ext.getCmp('text').markInvalid('text not available');
-                    return;
-                }
-                if (form.getForm().isValid()) {
-                    form.getForm().submit({
-                        url: '/vason_server/submit',
-                        success: function(_form, action) {
-                            window.close();
-                        },
-                        failure: function(_form, action) {
-                            document.write('<b>Sorry there was an error.. please send the following to cjauvin@gmail.com:</b><br/><br />' + action.result.error_msg);
-                        }
-                    });
-                }
+                process('submit');
             }
-        },{
+        }, {
+            text: 'Delete',
+            handler: function() {
+                process('delete');                
+            }            
+        }, {
             text: 'Cancel',
             handler: function() {
                 window.close();
@@ -92,7 +101,6 @@ Ext.onReady(function() {
         }]
     });
     form.render(document.body);    
-
 });
 </script>
 

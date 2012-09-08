@@ -18,7 +18,7 @@ def submit():
     db = Connection().vason
     request.form['time'] = datetime.datetime.now()
     key = {'url': request.form['url'], 'text': request.form['text']}
-    db.docs.update(key, request.form, upsert=True, safe=True)    
+    db.annotations.update(key, request.form, upsert=True, safe=True)    
     json_out = {'success': True}
     return json.dumps(json_out)
 
@@ -27,7 +27,7 @@ def retrieve():
     request.parameter_storage_class = dict
     db = Connection().vason
     key = {'url': request.form['url'], 'text': request.form['text']}
-    cur = db.docs.find(key)
+    cur = db.annotations.find(key)
     doc = cur[0] if cur.count() > 0 else {}
     if doc:
         del doc['_id']
@@ -36,16 +36,26 @@ def retrieve():
     json_out['data'] = doc
     return json.dumps(json_out)
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    request.parameter_storage_class = dict
+    db = Connection().vason
+    request.form['time'] = datetime.datetime.now()
+    key = {'url': request.form['url'], 'text': request.form['text']}
+    db.annotations.remove(key)
+    json_out = {'success': True}
+    return json.dumps(json_out)
+
 @app.route('/list', methods=['GET'])
 def _list():
     request.parameter_storage_class = dict
     db = Connection().vason
-    docs = sorted([(d['time'], d) for d in db.docs.find()], reverse=True)
-    docs = [d for (t,d) in docs]
-    for i, doc in enumerate(docs):
-        del docs[i]['_id']
-        docs[i]['time'] = docs[i]['time'].isoformat()
+    annotations = sorted([(d['time'], d) for d in db.annotations.find()], reverse=True)
+    annotations = [d for (t,d) in annotations]
+    for i, doc in enumerate(annotations):
+        del annotations[i]['_id']
+        annotations[i]['time'] = annotations[i]['time'].isoformat()
     json_out = {'success': True}
-    json_out['rows'] = docs
-    json_out['total'] = len(docs)
+    json_out['rows'] = annotations
+    json_out['total'] = len(annotations)
     return json.dumps(json_out)
