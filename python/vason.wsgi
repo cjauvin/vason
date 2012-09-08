@@ -1,5 +1,4 @@
-import traceback, datetime, psycopg2, psycopg2.extras, json
-import little_pger as db
+import traceback, json
 from flask import *
 from pymongo import *
 
