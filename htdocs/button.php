@@ -8,6 +8,11 @@
 
 <script type="text/javascript">
 
+<?php 
+echo sprintf("var url = '%s';", addslashes($_GET['url'])); 
+echo sprintf("var text = '%s';", addslashes($_GET['text'])); 
+?>
+
 Ext.onReady(function() {
 
     var form = Ext.widget({
@@ -18,21 +23,25 @@ Ext.onReady(function() {
         height: 150,
         fieldDefaults: {
             msgTarget: 'side',
-            labelWidth: 40
-        },
+            labelWidth: 65 
+       },
         defaultType: 'textfield',
         items: [{
             fieldLabel: 'URL',
             name: 'url',
             id: 'url',
-            allowBlank:false,
-            value: document.referrer ? document.referrer : '(not available for some reason)'
+            value: url ? url : '[not available: please supply it]',
+            allowBlank: false
         }, {
-            fieldLabel: 'Tags',
-            name: 'tags'
+            fieldLabel: 'Text',
+            name: 'text',
+            id: 'text',
+            value: text ? text : '[not available: please supply it]',
+            allowBlank: false
         }, {
-            fieldLabel: 'Notes',
-            name: 'notes'            
+            fieldLabel: 'Annotation',
+            name: 'annotation',
+            allowBlank: false
         }],
         loader: {
             url: '/vason_server/retrieve',
@@ -48,14 +57,19 @@ Ext.onReady(function() {
             },
             autoLoad: true,
             params: {
-                url: document.referrer
+                url: url,
+                text: text
             },
         },
         buttons: [{
             text: 'Save',
             handler: function() {
-                if (Ext.getCmp('url').getValue() == '(not available for some reason)') {
-                    Ext.getCmp('url').markInvalid('URL not available for some reason');
+                if (Ext.getCmp('url').getValue() == '[not available: please supply it]') {
+                    Ext.getCmp('url').markInvalid('URL not available');
+                    return;
+                }
+                if (Ext.getCmp('text').getValue() == '[not available: please supply it]') {
+                    Ext.getCmp('text').markInvalid('text not available');
                     return;
                 }
                 if (form.getForm().isValid()) {

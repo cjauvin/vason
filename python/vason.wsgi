@@ -1,4 +1,4 @@
-import traceback, json
+import traceback, json, datetime
 from flask import *
 from pymongo import *
 
@@ -17,7 +17,8 @@ def submit():
     request.parameter_storage_class = dict
     db = Connection().vason
     request.form['time'] = datetime.datetime.now()
-    db.docs.update({'url': request.form['url']}, request.form, upsert=True, safe=True)    
+    key = {'url': request.form['url'], 'text': request.form['text']}
+    db.docs.update(key, request.form, upsert=True, safe=True)    
     json_out = {'success': True}
     return json.dumps(json_out)
 
@@ -25,7 +26,8 @@ def submit():
 def retrieve():
     request.parameter_storage_class = dict
     db = Connection().vason
-    cur = db.docs.find({'url': request.form['url']})
+    key = {'url': request.form['url'], 'text': request.form['text']}
+    cur = db.docs.find(key)
     doc = cur[0] if cur.count() > 0 else {}
     if doc:
         del doc['_id']

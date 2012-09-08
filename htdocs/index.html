@@ -7,16 +7,16 @@
     <script type="text/javascript" src="extjs/ext-all.js"></script>
 
 <body>
-<h1 style="font-size: 200%">Welcome to the VaSOn Button app!</h1>
+<h1 style="font-size: 200%">Welcome to the VaSOn Annotation Button app!</h1>
 <br /><br />
 <span style="font-size: 150%">
 To begin, please drag this
 <a style="padding: 5px; text-decoration: none; border: 1px dashed blue" 
-   href="javascript:(function(){window.open('http://localhost/vason/button.html?x='+Math.random(),'_blank','width=500,height=150')})()">
-VaSOn Button</a>
-in your browser&apos;s bookmark area or toolbar.
+   href="javascript:(function(){window.open('http://localhost/vason/button.php?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(getSelection().toString())+'&_id='+Math.random(),'_blank','width=500,height=150')})()">
+  VaSOn Button</a>
+in your browser&apos;s bookmark area or "toolbar".
 <br /><br />
-To use, simply click on it whenever you want to record the page you are currently browsing.
+To use, select some text that you wish to annotate in the page you are currently browser, and click it, and complete the process in the popup window.
 You can then check in real-time the content of the database, in the grid below.
 <br /><br />
 <i>Todo: add/restructure fields if needed, add field autocompletion, make grid columns sortable, make items deletable.</i>
@@ -29,12 +29,13 @@ Ext.onReady(function() {
 
     Ext.define('Doc', {
         extend: 'Ext.data.Model',        
-        fields: [{name:'time', type:'date', dateFormat: 'c'}, 'url', 'tags', 'notes']
+        fields: ['url', 'text', 'annotation', {name:'time', type:'date', dateFormat: 'c'}]
     });
 
     var store = Ext.create('Ext.data.Store', {
         model: 'Doc',
         autoLoad: true,
+        groupField: 'url',
         proxy: {
             type: 'ajax',
             url: '/vason_server/list',
@@ -45,31 +46,39 @@ Ext.onReady(function() {
         }            
     });
 
+    var groupingFeature = Ext.create('Ext.grid.feature.Grouping',{
+        groupHeaderTpl: '{name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})',
+        hideGroupedHeader: true
+    });
+
     var grid = Ext.create('Ext.grid.Panel', {
         renderTo: document.body,
         title: 'Saved Documents',
         store: store,
         width: 800,
         height: 400,
+        features: [groupingFeature],
+        resizable: true,
         columns: [{
+            header: 'URL', 
+            dataIndex: 'url',
+            sortable: false
+        }, {
+            header: 'Text', 
+            dataIndex: 'text', 
+            flex: 2,
+            sortable: false
+        }, {
+            header: 'Annotation', 
+            dataIndex: 'annotation', 
+            flex: 2,
+            sortable: false            
+        }, {
             header: 'Time', 
             dataIndex: 'time',
             sortable: false,
             flex: 1,
             renderer: Ext.util.Format.dateRenderer('Y-m-d H:i:s')
-        }, {
-            header: 'URL', 
-            dataIndex: 'url',
-            flex: 2,
-            sortable: false
-        }, {
-            header: 'Tags', 
-            dataIndex: 'tags', 
-            sortable: false
-        }, {
-            header: 'Notes', 
-            dataIndex: 'notes', 
-            sortable: false
         }],
         dockedItems: {
             xtype: 'pagingtoolbar',
