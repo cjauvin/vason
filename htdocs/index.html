@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title id="page-title">VaSOn Button</title>
+    <link rel="stylesheet" type="text/css" href="extjs/resources/css/ext-all.css">
+    <script type="text/javascript" src="extjs/ext-all-debug.js"></script>
+
+<body>
+<h1 style="font-size: 200%">Welcome to the VaSOn Button app!</h1>
+<br /><br />
+<span style="font-size: 150%">
+To begin, please drag this
+<a style="padding: 5px; text-decoration: none; border: 1px dashed blue" 
+   href="javascript:(function(){window.open('http://localhost/vason/button.html?x='+Math.random(),'_blank','width=500,height=150')})()">
+VaSOn Button</a>
+in your browser&apos;s bookmark area or toolbar.
+<br /><br />
+To use, simply click on it whenever you want to record the page you are currently browsing.
+You can then check in real-time the content of the database, in the grid below.
+<br /><br />
+<i>Todo: add/restructure fields if needed, add field autocompletion, make grid columns sortable, make items deletable.</i>
+</span>
+<br /><br /><br />
+
+<script type="text/javascript">
+
+Ext.onReady(function() {
+
+    Ext.define('Doc', {
+        extend: 'Ext.data.Model',        
+        fields: [{name:'time', type:'date', dateFormat: 'c'}, 'url', 'tags', 'notes']
+    });
+
+    var store = Ext.create('Ext.data.Store', {
+        model: 'Doc',
+        autoLoad: true,
+        proxy: {
+            type: 'ajax',
+            url: '/vason_server/list',
+            reader: {
+                type: 'json',
+                root: 'rows'
+            }
+        }            
+    });
+
+    var grid = Ext.create('Ext.grid.Panel', {
+        renderTo: document.body,
+        title: 'Saved Documents',
+        store: store,
+        width: 800,
+        height: 400,
+        columns: [{
+            header: 'Time', 
+            dataIndex: 'time',
+            sortable: false,
+            flex: 1,
+            renderer: Ext.util.Format.dateRenderer('Y-m-d H:i:s')
+        }, {
+            header: 'URL', 
+            dataIndex: 'url',
+            flex: 2,
+            sortable: false
+        }, {
+            header: 'Tags', 
+            dataIndex: 'tags', 
+            sortable: false
+        }, {
+            header: 'Notes', 
+            dataIndex: 'notes', 
+            sortable: false
+        }],
+        dockedItems: {
+            xtype: 'pagingtoolbar',
+            store: store,
+            dock: 'bottom',
+            displayInfo: true
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

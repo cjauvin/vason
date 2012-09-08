@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title id="page-title">VaSOn Button</title>
+    <link rel="stylesheet" type="text/css" href="extjs/resources/css/ext-all.css">
+    <script type="text/javascript" src="extjs/ext-all-debug.js"></script>
+
+<script type="text/javascript">
+
+Ext.onReady(function() {
+
+    var form = Ext.widget({
+        xtype: 'form',
+        layout: 'form',
+        frame: true,
+        width: 500,
+        height: 150,
+        fieldDefaults: {
+            msgTarget: 'side',
+            labelWidth: 40
+        },
+        defaultType: 'textfield',
+        items: [{
+            fieldLabel: 'URL',
+            name: 'url',
+            id: 'url',
+            allowBlank:false,
+            value: document.referrer ? document.referrer : '(not available for some reason)'
+        }, {
+            fieldLabel: 'Tags',
+            name: 'tags'
+        }, {
+            fieldLabel: 'Notes',
+            name: 'notes'            
+        }],
+        loader: {
+            url: '/vason_server/retrieve',
+            renderer: function(loader, resp, opts) {
+                var result = Ext.JSON.decode(resp.responseText);
+                if (result.hasOwnProperty('error_msg')) {
+                    document.write('<b>Sorry there was an error.. please send the following to cjauvin@gmail.com:</b><br/><br />' + result.error_msg);
+                    return;
+                }
+                if (result) {
+                    form.getForm().loadRecord(result);
+                }
+            },
+            autoLoad: true,
+            params: {
+                url: document.referrer
+            },
+        },
+        buttons: [{
+            text: 'Save',
+            handler: function() {
+                if (Ext.getCmp('url').getValue() == '(not available for some reason)') {
+                    Ext.getCmp('url').markInvalid('URL not available for some reason');
+                    return;
+                }
+                if (form.getForm().isValid()) {
+                    form.getForm().submit({
+                        url: '/vason_server/submit',
+                        success: function(_form, action) {
+                            window.close();
+                        },
+                        failure: function(_form, action) {
+                            document.write('<b>Sorry there was an error.. please send the following to cjauvin@gmail.com:</b><br/><br />' + action.result.error_msg);
+                        }
+                    });
+                }
+            }
+        },{
+            text: 'Cancel',
+            handler: function() {
+                window.close();
+            }
+        }]
+    });
+    form.render(document.body);    
+
+});
+</script>
+
+
+</head>
+<body>
+</body>
+</html>
