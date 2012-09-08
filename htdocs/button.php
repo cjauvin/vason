@@ -9,8 +9,8 @@
 <script type="text/javascript">
 
 <?php 
-echo sprintf("var url = '%s';", addslashes($_GET['url'])); 
-echo sprintf("var text = '%s';", addslashes($_GET['text'])); 
+echo sprintf("var url = '%s';", get_magic_quotes_gpc() ? $_GET['url'] : addslashes($_GET['url']));
+echo sprintf("var text = '%s';", get_magic_quotes_gpc() ? $_GET['text'] : addslashes($_GET['text'])); 
 ?>
 
 Ext.onReady(function() {

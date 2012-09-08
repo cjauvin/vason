@@ -12,7 +12,7 @@
 <br /><br />
 
 <?php
-$base_url = sprintf("http%s://%s", isset($_SERVER['HTTPS'])?"s":"",  $_SERVER['SERVER_NAME']);
+$base_url = sprintf("http%s://%s", isset($_SERVER['HTTPS']) ? "s" : "",  $_SERVER['SERVER_NAME']);
 ?>
 
 <span style="font-size: 150%">
