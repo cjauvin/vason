@@ -23,7 +23,7 @@ To begin, please drag this
 in your browser&apos;s bookmark area or toolbar.
 <br /><br />
 
-To use, first select some text (i.e. highlight with the mouse) that you wish to annotate in the page you are currently browsing, then click the button, and complete the annotation in the popup window. 
+To use, first select some text (i.e. highlight it with the mouse) that you wish to annotate in the page you are currently browsing, then click the button, and complete the annotation in the popup window. 
 The annotation items are grouped by URL/text, so you can correct or delete a previous entry by selecting it again.
 You can check the content of the database in real-time, with the grid below.
 <br /><br />
