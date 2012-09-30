@@ -46,10 +46,11 @@ def delete():
     request.parameter_storage_class = dict
     db = Connection().vason
     request.form['time'] = datetime.datetime.now()
-    key = {'url': request.form['url'], 'text': request.form['text']}
+    key = {'user': request.form['user'], 'url': request.form['url'], 'text': request.form['text']}
     db.annotations.remove(key)
-    json_out = {'success': True}
-    return json.dumps(json_out)
+    resp = make_response()
+    resp.set_cookie('vason_user', request.form['user'])
+    return resp
 
 @app.route('/list', methods=['GET'])
 def _list():
