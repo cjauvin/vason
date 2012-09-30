@@ -46,7 +46,7 @@ Ext.onReady(function() {
 
     Ext.define('Doc', {
         extend: 'Ext.data.Model',        
-        fields: ['url', 'text', 'annotation', {name:'time', type:'date', dateFormat: 'c'}]
+        fields: ['url', 'text', 'annotation', {name:'time', type:'date', dateFormat: 'c'}, 'user']
     });
 
     var store = Ext.create('Ext.data.Store', {
@@ -90,6 +90,11 @@ Ext.onReady(function() {
             dataIndex: 'annotation', 
             flex: 2,
             sortable: false            
+        }, {
+            header: 'User', 
+            dataIndex: 'user',
+            sortable: false,
+            flex: 1
         }, {
             header: 'Time', 
             dataIndex: 'time',

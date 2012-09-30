@@ -49,6 +49,16 @@ Ext.onReady(function() {
        },
         defaultType: 'textfield',
         items: [{
+            xtype: 'combo',
+            fieldLabel: 'User',
+            name: 'user',
+            allowBlank: false,
+            editable: false,
+            triggerAction: 'all',
+            typeAhead: false,
+            mode: 'local',
+            store: ['Stephanie', 'Christian', 'Arash', 'David']
+        }, {
             fieldLabel: 'URL',
             name: 'url',
             id: 'url',
@@ -75,6 +85,14 @@ Ext.onReady(function() {
                 }
                 if (result) {
                     form.getForm().loadRecord(result);
+                    if (result.hasOwnProperty('warning_msg')) {
+                        Ext.Msg.show({
+                            title: 'Warning', 
+                            msg: result.warning_msg,
+                            icon: Ext.MessageBox.WARNING,
+                            buttons: Ext.MessageBox.OK
+                        });                                
+                    }
                 }
             },
             autoLoad: true,

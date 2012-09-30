@@ -17,22 +17,27 @@ def submit():
     request.parameter_storage_class = dict
     db = Connection().vason
     request.form['time'] = datetime.datetime.now()
-    key = {'url': request.form['url'], 'text': request.form['text']}
+    key = {'user': request.form['user'], 'url': request.form['url'], 'text': request.form['text']}
     db.annotations.update(key, request.form, upsert=True, safe=True)    
-    json_out = {'success': True}
-    return json.dumps(json_out)
+    resp = make_response()
+    resp.set_cookie('vason_user', request.form['user'])
+    return resp
 
 @app.route('/retrieve', methods=['POST'])
 def retrieve():
     request.parameter_storage_class = dict
     db = Connection().vason
+    user = request.cookies.get('vason_user')    
     key = {'url': request.form['url'], 'text': request.form['text']}
     cur = db.annotations.find(key)
     doc = cur[0] if cur.count() > 0 else {}
+    json_out = {'success': True}
     if doc:
         del doc['_id']
         del doc['time']
-    json_out = {'success': True}
+        if user and user != doc['user']:
+            json_out['warning_msg'] = '%s has already created the same annotation.' % doc['user']
+    doc['user'] = user
     json_out['data'] = doc
     return json.dumps(json_out)
 
